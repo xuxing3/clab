@@ -1,0 +1,15 @@
+name: xrd
+
+topology:
+  kinds:
+    cisco_xrd:
+      image: ios-xr/xrd-control-plane:7.9.2
+  nodes:
+    P1:
+      kind: cisco_xrd
+      startup-config: xrd.cfg
+    P2:
+      kind: cisco_xrd
+      startup-config: xrd.cfg
+  links:
+    - endpoints: ["P1:Gi0-0-0-0", "P2:Gi0-0-0-0"]

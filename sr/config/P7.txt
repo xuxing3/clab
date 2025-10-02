@@ -1,0 +1,110 @@
+RP/0/0/CPU0:P7#show run 
+Tue Apr 13 10:47:03.522 UTC
+Building configuration...
+!! IOS XR Configuration 6.5.2
+!! Last configuration change at Tue Apr 13 09:34:50 2021 by cisco
+!
+hostname P7
+telnet vrf default ipv4 server max-servers 100
+username admin
+ group root-lr
+ group cisco-support
+ password cisco!123
+ssh server v2
+interface Loopback0
+ description Loopback
+ ipv4 address 192.168.0.7 255.255.255.255
+ ipv6 address 2001::192:168:0:7/128
+!
+interface GigabitEthernet0/0/0/0
+ description to P6
+ ipv4 address 67.1.1.7 255.255.255.0
+ ipv6 address 2001::67:1:1:7/120
+!
+interface GigabitEthernet0/0/0/1
+ description to PE4
+ ipv4 address 47.1.1.7 255.255.255.0
+ ipv6 address 2001::47:1:1:7/120
+!
+interface GigabitEthernet0/0/0/2
+ description to P1
+ ipv4 address 17.1.1.7 255.255.255.0
+ ipv6 address 2001::17:1:1:7/120
+!
+router isis srte
+ is-type level-2-only
+ net 49.1921.6800.0007.00
+ distribute link-state
+ address-family ipv4 unicast
+  metric-style wide
+  router-id Loopback0
+  segment-routing mpls
+ !
+ address-family ipv6 unicast
+  metric-style wide
+  segment-routing mpls
+ !
+ interface Loopback0
+  passive
+  circuit-type level-2-only
+  address-family ipv4 unicast
+   prefix-sid index 7
+  !       
+  address-family ipv6 unicast
+   prefix-sid absolute 17007
+  !
+ !
+ interface GigabitEthernet0/0/0/0
+  circuit-type level-2-only
+  point-to-point
+  address-family ipv4 unicast
+   metric 1
+  !
+  address-family ipv6 unicast
+   metric 1
+  !
+ !
+ interface GigabitEthernet0/0/0/1
+  circuit-type level-2-only
+  point-to-point
+  address-family ipv4 unicast
+   metric 1
+  !
+  address-family ipv6 unicast
+   metric 1
+  !       
+ !
+ interface GigabitEthernet0/0/0/2
+  circuit-type level-2-only
+  point-to-point
+  address-family ipv4 unicast
+   metric 1
+  !
+  address-family ipv6 unicast
+   metric 1
+  !
+ !
+!
+mpls oam
+!
+mpls ldp
+ log
+  hello-adjacency
+  neighbor
+ !
+ router-id 192.168.0.7
+ address-family ipv4
+  label
+   local  
+    allocate for host-routes
+   !
+  !
+ !
+ interface GigabitEthernet0/0/0/0
+ !
+ interface GigabitEthernet0/0/0/1
+ !
+ interface GigabitEthernet0/0/0/2
+ !
+!
+end

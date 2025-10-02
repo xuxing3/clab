@@ -1,0 +1,37 @@
+name: sr-xr
+
+topology:
+  kinds:
+    cisco_xrd:
+      image: ios-xr/xrd-control-plane:7.9.2
+  nodes:
+    XTC:
+      kind: cisco_xrd
+      startup-config: config/SR-PCE.txt
+    P1:
+      kind: cisco_xrd
+      startup-config: config/P1.txt
+    P7:
+      kind: cisco_xrd
+      startup-config: config/P7.txt
+    PE6:
+      kind: cisco_xrd
+      startup-config: config/PE6.txt
+    PE4:
+      kind: cisco_xrd
+      startup-config: config/PE4.txt
+    AS10:
+      kind: cisco_xrd
+      startup-config: config/AS10.txt
+    AS11:
+      kind: cisco_xrd
+      startup-config: config/AS11.txt
+  links:
+    - endpoints: ["XTC:Gi0-0-0-0", "P1:Gi0-0-0-0"]
+    - endpoints: ["P1:Gi0-0-0-1", "PE6:Gi0-0-0-0"]
+    - endpoints: ["P1:Gi0-0-0-2", "PE4:Gi0-0-0-1"]
+    - endpoints: ["P1:Gi0-0-0-3", "P7:Gi0-0-0-2"]
+    - endpoints: ["PE6:Gi0-0-0-1", "P7:Gi0-0-0-0"]
+    - endpoints: ["P7:Gi0-0-0-1", "PE4:Gi0-0-0-0"]
+    - endpoints: ["PE4:Gi0-0-0-2", "AS11:Gi0-0-0-0"]
+    - endpoints: ["PE4:Gi0-0-0-3", "AS10:Gi0-0-0-0"]

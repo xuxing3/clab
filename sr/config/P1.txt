@@ -1,0 +1,122 @@
+RP/0/0/CPU0:P1#show run 
+Tue Apr 13 10:41:54.542 UTC
+Building configuration...
+!! IOS XR Configuration 6.5.2
+!! Last configuration change at Tue Apr 13 10:24:00 2021 by cisco
+!
+hostname P1
+telnet vrf default ipv4 server max-servers 100
+username admin
+ group root-lr
+ group cisco-support
+ password cisco!123
+ssh server v2
+interface Loopback0
+ description Loopback
+ ipv4 address 192.168.0.1 255.255.255.255
+ ipv6 address 2001::192:168:0:1/128
+!
+interface GigabitEthernet0/0/0/0
+ description to XTC
+ ipv4 address 19.1.1.1 255.255.255.0
+ ipv6 address 2001::19:1:1:1/120
+!
+interface GigabitEthernet0/0/0/1
+ description to PE6
+ mtu 9000
+ ipv4 address 16.1.1.1 255.255.255.0
+ ipv6 address 2001::16:1:1:1/120
+!         
+interface GigabitEthernet0/0/0/2
+ description to PE4
+ mtu 9000
+ ipv4 address 14.1.1.1 255.255.255.0
+ ipv6 address 2001::14:1:1:1/120
+!
+interface GigabitEthernet0/0/0/3
+ description to P7
+ ipv4 address 17.1.1.1 255.255.255.0
+ ipv6 address 2001::17:1:1:1/120
+!
+router isis srte
+ is-type level-2-only
+ net 49.1921.6800.0001.00
+ distribute link-state
+ address-family ipv4 unicast
+  metric-style wide
+  router-id Loopback0
+  segment-routing mpls
+ !
+ address-family ipv6 unicast
+  metric-style wide
+  segment-routing mpls
+ !
+ interface Loopback0
+  passive
+  circuit-type level-2-only
+  address-family ipv4 unicast
+   prefix-sid index 1
+  !
+  address-family ipv6 unicast
+   prefix-sid absolute 17001
+  !
+ !
+ interface GigabitEthernet0/0/0/0
+  circuit-type level-2-only
+  point-to-point
+  address-family ipv4 unicast
+   metric 5000
+  !
+  address-family ipv6 unicast
+   metric 5000
+  !
+ !
+ interface GigabitEthernet0/0/0/1
+  circuit-type level-2-only
+  point-to-point
+  hello-padding disable
+  address-family ipv4 unicast
+   fast-reroute per-prefix
+   fast-reroute per-prefix ti-lfa
+   metric 1
+  !
+  address-family ipv6 unicast
+   metric 1
+  !
+ !
+ interface GigabitEthernet0/0/0/2
+  circuit-type level-2-only
+  point-to-point
+  hello-padding disable
+  address-family ipv4 unicast
+   fast-reroute per-prefix
+   fast-reroute per-prefix ti-lfa
+   metric 1
+  !
+  address-family ipv6 unicast
+   metric 1
+  !       
+ !
+ interface GigabitEthernet0/0/0/3
+  circuit-type level-2-only
+  point-to-point
+  address-family ipv4 unicast
+   metric 1
+  !
+  address-family ipv6 unicast
+   metric 1
+  !
+ !
+!
+mpls oam
+!
+segment-routing
+ mapping-server
+  prefix-sid-map
+   address-family ipv4
+    192.168.0.4/32 44
+   !
+  !
+ !
+!         
+end

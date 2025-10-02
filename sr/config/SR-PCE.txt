@@ -1,0 +1,95 @@
+RP/0/0/CPU0:SR-PCE#show run 
+Tue Apr 13 10:42:50.918 UTC
+Building configuration...
+!! IOS XR Configuration 6.5.2
+!! Last configuration change at Tue Apr 13 06:19:22 2021 by cisco
+!
+hostname SR-PCE
+telnet vrf default ipv4 server max-servers 100
+username admin
+ group root-lr
+ group cisco-support
+ password cisco!123
+ssh server v2
+pce
+ address ipv4 192.168.0.9
+ rest
+  user cisco
+  !
+  authentication basic
+ !
+ logging
+  no-path
+  fallback
+ !
+ password encrypted 14141B180F0B
+!
+line console
+ exec-timeout 0 0
+!
+interface Loopback0
+ ipv4 address 192.168.0.9 255.255.255.255
+ ipv6 address 2001::192:168:0:9/128
+!
+interface GigabitEthernet0/0/0/0
+ description to P1
+ ipv4 address 19.1.1.9 255.255.255.0
+!
+route-policy bgp_in
+  pass
+end-policy
+!
+route-policy bgp_out
+  pass
+end-policy
+!
+router isis srte
+ is-type level-2-only
+ net 49.1921.6800.0009.00
+ distribute link-state
+ address-family ipv4 unicast
+  metric-style wide
+ !        
+ address-family ipv6 unicast
+  metric-style wide
+ !
+ interface Loopback0
+  passive
+  circuit-type level-2-only
+  address-family ipv4 unicast
+  !
+  address-family ipv6 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/0
+  circuit-type level-2-only
+  point-to-point
+  address-family ipv4 unicast
+   metric 5000
+  !
+  address-family ipv6 unicast
+   metric 5000
+  !
+ !
+!
+router bgp 1
+ bgp router-id 192.168.0.9
+ address-family ipv4 unicast
+ !
+ address-family link-state link-state
+ !
+ neighbor 192.168.0.4
+  remote-as 1
+  description iBGP peer PE4
+  update-source Loopback0
+  address-family link-state link-state
+  !
+ !
+!
+mpls oam
+!
+segment-routing
+ traffic-eng
+ !
+!
+end

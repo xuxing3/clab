@@ -1,0 +1,144 @@
+RP/0/0/CPU0:PE6#show run 
+Tue Apr 13 10:47:02.442 UTC
+Building configuration...
+!! IOS XR Configuration 6.5.2
+!! Last configuration change at Tue Apr 13 10:28:40 2021 by cisco
+!
+hostname PE6
+telnet vrf default ipv4 server max-servers 100
+username admin
+ group root-lr
+ group cisco-support
+ password cisco!123
+ssh server v2
+vrf A
+ address-family ipv4 unicast
+  import route-target
+   1:1
+  !
+  export route-target
+   1:1
+  !
+ !
+!
+interface Loopback0
+ description Loopback
+ ipv4 address 192.168.0.6 255.255.255.255
+ ipv6 address 2001::192:168:0:6/128
+!
+interface Loopback1
+ ipv4 address 1.1.1.1 255.255.255.255
+!
+interface Loopback101
+ vrf A
+ ipv4 address 172.16.1.6 255.255.255.255
+!
+interface GigabitEthernet0/0/0/0
+ description to P1
+ ipv4 address 16.1.1.6 255.255.255.0
+ ipv6 address 2001::16:1:1:6/120
+!
+interface GigabitEthernet0/0/0/1
+ description to P7
+ ipv4 address 67.1.1.6 255.255.255.0
+ ipv6 address 2001::67:1:1:6/120
+!
+route-policy RR_IN
+  pass
+end-policy
+!
+route-policy RR_OUT
+  pass
+end-policy
+!
+router isis srte
+ is-type level-2-only
+ net 49.1921.6800.0006.00
+ distribute link-state
+ address-family ipv4 unicast
+  metric-style wide
+  router-id Loopback0
+  segment-routing mpls sr-prefer
+ !
+ address-family ipv6 unicast
+  metric-style wide
+  segment-routing mpls
+ !
+ interface Loopback0
+  passive
+  circuit-type level-2-only
+  address-family ipv4 unicast
+   prefix-sid index 6
+  !
+  address-family ipv6 unicast
+   prefix-sid absolute 17006
+  !       
+ !
+ interface GigabitEthernet0/0/0/0
+  circuit-type level-2-only
+  point-to-point
+  hello-padding disable
+  address-family ipv4 unicast
+   metric 1
+  !
+  address-family ipv6 unicast
+   metric 1
+  !
+ !
+ interface GigabitEthernet0/0/0/1
+  circuit-type level-2-only
+  point-to-point
+  address-family ipv4 unicast
+   metric 1
+  !
+  address-family ipv6 unicast
+   metric 1
+  !
+ !
+!         
+router bgp 1
+ bgp router-id 192.168.0.6
+ address-family vpnv4 unicast
+ !
+ neighbor 192.168.0.4
+  remote-as 1
+  description iBGP peer PE4
+  update-source Loopback0
+  address-family vpnv4 unicast
+   route-policy RR_IN in
+   route-reflector-client
+   route-policy RR_OUT out
+   next-hop-self
+   soft-reconfiguration inbound always
+  !
+ !
+ vrf A
+  rd 1:1
+  address-family ipv4 unicast
+   redistribute connected
+  !
+ !
+!         
+mpls oam
+!
+segment-routing
+ traffic-eng
+  on-demand color 10
+   dynamic
+    pcep
+    !
+    metric
+     type te
+    !
+   !
+  !
+  pcc
+   source-address ipv4 192.168.0.6
+   pce address ipv4 192.168.0.9
+    password encrypted 0822455D0A16
+   !
+   report-all
+  !
+ !
+!
+end       
