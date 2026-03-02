@@ -1,0 +1,44 @@
+hostname CE1
+username admin
+ group root-lr
+ group cisco-support
+ password cisco!123
+ssh server v2
+line default
+ exec-timeout 0 0
+!
+lldp
+!
+interface Loopback0
+ ipv4 address 10.1.3.3 255.255.255.255
+!
+interface Loopback100
+ ipv4 address 172.16.3.3 255.255.255.255
+!
+interface MgmtEth0/0/CPU0/0
+ shutdown
+!
+interface GigabitEthernet0/0/0/0
+ description to PE1
+ lldp
+ ipv4 address 10.1.13.3 255.255.255.0
+ no shutdown
+!
+route-policy PASS
+  pass
+end-policy
+!
+router bgp 6000
+ bgp router-id 10.1.3.3
+ address-family ipv4 unicast
+  network 172.16.3.3/32
+ !
+ neighbor 10.1.13.1
+  remote-as 9929
+  address-family ipv4 unicast
+   route-policy PASS in
+   route-policy PASS out
+  !
+ !
+!
+end

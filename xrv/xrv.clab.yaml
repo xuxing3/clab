@@ -1,0 +1,23 @@
+name: xrv-lab
+
+topology:
+  kinds:
+    cisco_xrd:
+      image: ios-xr/xrd-control-plane:7.9.2
+  nodes:
+    xrv-0:
+      kind: cisco_xrd
+      startup-config: config/xrv-0.cfg
+    xrv-1:
+      kind: cisco_xrd
+      startup-config: config/xrv-1.cfg
+    xrv-2:
+      kind: cisco_xrd
+      startup-config: config/xrv-2.cfg
+    xrv-3:
+      kind: cisco_xrd
+      startup-config: config/xrv-3.cfg
+  links:
+    - endpoints: ["xrv-0:Gi0-0-0-2", "xrv-2:Gi0-0-0-0"]
+    - endpoints: ["xrv-1:Gi0-0-0-2", "xrv-2:Gi0-0-0-1"]
+    - endpoints: ["xrv-2:Gi0-0-0-2", "xrv-3:Gi0-0-0-0"]

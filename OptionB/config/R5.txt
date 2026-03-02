@@ -1,0 +1,82 @@
+hostname R5
+username admin
+ group root-lr
+ group cisco-support
+ password cisco!123
+ssh server v2
+line default
+ exec-timeout 0 0
+!
+interface Loopback0
+ ipv4 address 10.1.5.5 255.255.255.255
+!
+interface MgmtEth0/0/CPU0/0
+ shutdown
+!
+interface GigabitEthernet0/0/0/0
+ ipv4 address 10.1.56.5 255.255.255.0
+!
+interface GigabitEthernet0/0/0/1
+ ipv4 address 10.1.45.5 255.255.255.0
+!
+route-policy EBGP_PASS
+  pass
+end-policy
+!
+router static
+ address-family ipv4 unicast
+  10.1.45.4/32 GigabitEthernet0/0/0/1
+ !
+!
+router isis 1
+ is-type level-2-only
+ net 49.0001.0000.0000.0005.00
+ address-family ipv4 unicast
+  metric-style wide
+ !
+ interface Loopback0
+  passive
+  address-family ipv4 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/0
+  point-to-point
+  address-family ipv4 unicast
+  !
+ !
+!
+router bgp 2
+ bgp router-id 10.1.5.5
+ address-family vpnv4 unicast
+  retain route-target all
+ !
+ neighbor 10.1.7.7
+  remote-as 2
+  update-source Loopback0
+  address-family vpnv4 unicast
+   next-hop-self
+  !
+ !
+ neighbor 10.1.45.4
+  remote-as 1
+  address-family vpnv4 unicast
+   route-policy EBGP_PASS in
+   route-policy EBGP_PASS out
+  !
+ !
+!
+mpls ldp
+ log
+  neighbor
+ !
+ router-id 10.1.5.5
+ address-family ipv4
+  label
+   local
+    allocate for host-routes
+   !
+  !
+ !
+ interface GigabitEthernet0/0/0/0
+ !
+!

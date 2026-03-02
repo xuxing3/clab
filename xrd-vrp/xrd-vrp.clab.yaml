@@ -1,0 +1,17 @@
+name: xrd-vrp
+
+topology:
+  kinds:
+    cisco_xrd:
+      image: ios-xr/xrd-control-plane:7.9.2
+    huawei_vrp:
+      image: windddkz/huawei_vrp:ne40e-8.180
+  nodes:
+    xr1:
+      kind: cisco_xrd
+      startup-config: config/xr1.cfg
+    vrp1:
+      kind: huawei_vrp
+      startup-config: config/vrp1.cfg
+  links:
+    - endpoints: ["xr1:Gi0-0-0-0", "vrp1:eth1"]

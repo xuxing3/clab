@@ -1,0 +1,72 @@
+hostname B
+username admin
+ group root-lr
+ group cisco-support
+ password cisco!123
+ssh server v2
+line default
+ exec-timeout 0 0
+!
+lldp
+!
+vrf CUST1
+  address-family ipv4 unicast
+   import route-target  65001:100
+   export route-target  65001:100
+
+interface Loopback0
+ ipv4 address 10.1.2.2 255.255.255.255
+ ipv6 address 2001:db8:0:2::2/128
+!
+interface MgmtEth0/0/CPU0/0
+ shutdown
+!
+interface GigabitEthernet0/0/0/0
+ description to A
+ lldp
+ ipv4 address 10.1.12.2 255.255.255.0
+ ipv6 address 2001:db8:12::2/64
+!
+interface GigabitEthernet0/0/0/1
+ description to C
+ lldp
+ ipv4 address 10.1.23.2 255.255.255.0
+ ipv6 address 2001:db8:23::2/64
+!
+segment-routing
+ srv6
+  locators
+   locator SRV6
+    prefix 2001:db8:aa2::/48
+     micro-segment behavior unode psp-usd
+!
+route-policy ALL-PERMIT
+  pass
+end-policy
+!
+router static
+ address-family ipv4 unicast
+  10.1.1.1/32 10.1.12.1
+  10.1.3.3/32 10.1.23.3
+ !
+!
+router bgp 65002
+ bgp router-id 10.1.2.2
+ address-family ipv6 unicast
+  network 2001:db8:aa2::/48
+ !
+ neighbor 2001:db8:12::1
+  remote-as 65001
+  address-family ipv6 unicast
+   route-policy ALL-PERMIT in
+   route-policy ALL-PERMIT out
+  !
+ !
+ neighbor 2001:db8:23::3
+  remote-as 65003
+  address-family ipv6 unicast
+   route-policy ALL-PERMIT in
+   route-policy ALL-PERMIT out
+  !
+ !
+!

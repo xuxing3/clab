@@ -1,0 +1,35 @@
+hostname R1
+username admin
+ group root-lr
+ group cisco-support
+ password cisco!123
+ssh server v2
+line default
+ exec-timeout 0 0
+!
+interface Loopback0
+ ipv4 address 10.1.1.1 255.255.255.255
+!
+interface MgmtEth0/0/CPU0/0
+ shutdown
+!
+interface GigabitEthernet0/0/0/0
+ ipv4 address 10.1.12.1 255.255.255.0
+!
+route-policy EBGP_PASS
+  pass
+end-policy
+!
+router bgp 65000
+ bgp router-id 10.1.1.1
+ address-family ipv4 unicast
+  network 10.1.1.1/32
+ !
+ neighbor 10.1.12.2
+  remote-as 1
+  address-family ipv4 unicast
+   route-policy EBGP_PASS in
+   route-policy EBGP_PASS out
+  !
+ !
+!

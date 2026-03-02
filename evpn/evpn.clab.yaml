@@ -1,0 +1,37 @@
+name: evpn-lab
+
+topology:
+  kinds:
+    cisco_xrd:
+      image: ios-xr/xrd-control-plane:7.9.2
+  nodes:
+    PE1:
+      kind: cisco_xrd
+      startup-config: evpn-srte-fallback/PE1.txt
+    PE2:
+      kind: cisco_xrd
+      startup-config: evpn-srte-fallback/PE2.txt
+    P3:
+      kind: cisco_xrd
+      startup-config: evpn-srte-fallback/P3.txt
+    PE4:
+      kind: cisco_xrd
+      startup-config: evpn-srte-fallback/PE4.txt
+    CE1:
+      kind: cisco_xrd
+      startup-config: evpn-srte-fallback/CE1.txt
+    CE2:
+      kind: cisco_xrd
+      startup-config: evpn-srte-fallback/CE2.txt
+    CE3:
+      kind: cisco_xrd
+      startup-config: evpn-srte-fallback/CE3.txt
+  links:
+    - endpoints: ["CE1:Gi0-0-0-0", "PE1:Gi0-0-0-0"]
+    - endpoints: ["CE1:Gi0-0-0-1", "PE2:Gi0-0-0-1"]
+    - endpoints: ["CE2:Gi0-0-0-0", "PE2:Gi0-0-0-0"]
+    - endpoints: ["CE2:Gi0-0-0-1", "PE1:Gi0-0-0-1"]
+    - endpoints: ["PE1:Gi0-0-0-2", "P3:Gi0-0-0-0"]
+    - endpoints: ["PE2:Gi0-0-0-2", "P3:Gi0-0-0-1"]
+    - endpoints: ["P3:Gi0-0-0-2", "PE4:Gi0-0-0-0"]
+    - endpoints: ["PE4:Gi0-0-0-1", "CE3:Gi0-0-0-0"]

@@ -1,0 +1,19 @@
+name: srv6
+
+topology:
+  kinds:
+    cisco_xrd:
+      image: ios-xr/xrd-control-plane:7.9.2
+  nodes:
+    A:
+      kind: cisco_xrd
+      startup-config: config/A.txt
+    B:
+      kind: cisco_xrd
+      startup-config: config/B.txt
+    C:
+      kind: cisco_xrd
+      startup-config: config/C.txt
+  links:
+    - endpoints: ["A:Gi0-0-0-0", "B:Gi0-0-0-0"]
+    - endpoints: ["B:Gi0-0-0-1", "C:Gi0-0-0-0"]

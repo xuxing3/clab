@@ -1,0 +1,35 @@
+hostname R8
+username admin
+ group root-lr
+ group cisco-support
+ password cisco!123
+ssh server v2
+line default
+ exec-timeout 0 0
+!
+interface Loopback0
+ ipv4 address 10.1.8.8 255.255.255.255
+!
+interface MgmtEth0/0/CPU0/0
+ shutdown
+!
+interface GigabitEthernet0/0/0/0
+ ipv4 address 10.1.78.8 255.255.255.0
+!
+route-policy EBGP_PASS
+  pass
+end-policy
+!
+router bgp 65001
+ bgp router-id 10.1.8.8
+ address-family ipv4 unicast
+  network 10.1.8.8/32
+ !
+ neighbor 10.1.78.7
+  remote-as 2
+  address-family ipv4 unicast
+   route-policy EBGP_PASS in
+   route-policy EBGP_PASS out
+  !
+ !
+!

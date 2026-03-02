@@ -1,0 +1,34 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor settings
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Environment files
+.env
+.env.*
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Archives
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+
+# Local temporary files
+tmp/
+temp/
+
+# Intentionally do not ignore directories starting with `clab`

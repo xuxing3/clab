@@ -1,0 +1,60 @@
+hostname R6
+username admin
+ group root-lr
+ group cisco-support
+ password cisco!123
+ssh server v2
+line default
+ exec-timeout 0 0
+!
+interface Loopback0
+ ipv4 address 10.1.6.6 255.255.255.255
+!
+interface MgmtEth0/0/CPU0/0
+ shutdown
+!
+interface GigabitEthernet0/0/0/0
+ ipv4 address 10.1.56.6 255.255.255.0
+!
+interface GigabitEthernet0/0/0/1
+ ipv4 address 10.1.67.6 255.255.255.0
+!
+router isis 1
+ is-type level-2-only
+ net 49.0001.0000.0000.0006.00
+ address-family ipv4 unicast
+  metric-style wide
+ !
+ interface Loopback0
+  passive
+  address-family ipv4 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/0
+  point-to-point
+  address-family ipv4 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/1
+  point-to-point
+  address-family ipv4 unicast
+  !
+ !
+!
+mpls ldp
+ log
+  neighbor
+ !
+ router-id 10.1.6.6
+ address-family ipv4
+  label
+   local
+    allocate for host-routes
+   !
+  !
+ !
+ interface GigabitEthernet0/0/0/0
+ !
+ interface GigabitEthernet0/0/0/1
+ !
+!

@@ -1,0 +1,39 @@
+name: optionb
+
+topology:
+  kinds:
+    cisco_xrd:
+      image: ios-xr/xrd-control-plane:7.9.2
+  nodes:
+    R1:
+      kind: cisco_xrd
+      startup-config: config/R1.txt
+    R2:
+      kind: cisco_xrd
+      startup-config: config/R2.txt
+    R3:
+      kind: cisco_xrd
+      startup-config: config/R3.txt
+    R4:
+      kind: cisco_xrd
+      startup-config: config/R4.txt
+    R5:
+      kind: cisco_xrd
+      startup-config: config/R5.txt
+    R6:
+      kind: cisco_xrd
+      startup-config: config/R6.txt
+    R7:
+      kind: cisco_xrd
+      startup-config: config/R7.txt
+    R8:
+      kind: cisco_xrd
+      startup-config: config/R8.txt
+  links:
+    - endpoints: ["R1:Gi0-0-0-0", "R2:Gi0-0-0-0"]
+    - endpoints: ["R2:Gi0-0-0-1", "R3:Gi0-0-0-1"]
+    - endpoints: ["R3:Gi0-0-0-0", "R4:Gi0-0-0-0"]
+    - endpoints: ["R4:Gi0-0-0-1", "R5:Gi0-0-0-1"]
+    - endpoints: ["R5:Gi0-0-0-0", "R6:Gi0-0-0-0"]
+    - endpoints: ["R6:Gi0-0-0-1", "R7:Gi0-0-0-1"]
+    - endpoints: ["R7:Gi0-0-0-0", "R8:Gi0-0-0-0"]

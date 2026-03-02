@@ -1,0 +1,3 @@
+- Default user credentials: admin:admin
+- eth0 - management interface GigabitEthernet0/0/0
+- eth1 - Ethernet1/0/0

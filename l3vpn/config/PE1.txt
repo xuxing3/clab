@@ -1,0 +1,105 @@
+hostname PE1
+username admin
+ group root-lr
+ group cisco-support
+ password cisco!123
+ssh server v2
+line default
+ exec-timeout 0 0
+!
+lldp
+!
+
+vrf CUST1
+ address-family ipv4 unicast
+  import route-target 6000:1
+  export route-target 6000:1
+ !
+!
+interface Loopback0
+ ipv4 address 10.1.1.1 255.255.255.255
+!
+interface MgmtEth0/0/CPU0/0
+ shutdown
+!
+interface GigabitEthernet0/0/0/0
+ description to PE2
+ lldp
+ ipv4 address 10.1.12.1 255.255.255.0
+ no shutdown
+!
+interface GigabitEthernet0/0/0/1
+ description to CE1
+ lldp
+ vrf CUST1
+ ipv4 address 10.1.13.1 255.255.255.0
+ no shutdown
+!
+route-policy PASS
+  pass
+end-policy
+!
+router isis CORE
+ set-overload-bit on-startup 30
+ is-type level-2-only
+ net 49.0001.0000.0000.0001.00
+ nsr
+ distribute link-state level 2
+ nsf ietf
+ log adjacency changes
+ lsp-refresh-interval 32768
+ max-lsp-lifetime 65535
+ address-family ipv4 unicast
+  metric-style wide
+  mpls traffic-eng level-2-only
+  mpls traffic-eng router-id Loopback0
+  mpls traffic-eng igp-intact
+  maximum-paths 64
+  segment-routing mpls
+ !
+ address-family ipv6 unicast
+  maximum-paths 64
+ !
+ interface Loopback0
+  passive
+  address-family ipv4 unicast
+ !
+ interface GigabitEthernet0/0/0/0
+  circuit-type level-2-only
+  point-to-point
+  hello-padding disable
+  address-family ipv4 unicast
+ !
+!
+router bgp 9929
+ bgp router-id 10.1.1.1
+ address-family vpnv4 unicast
+ !
+ neighbor 10.1.2.2
+  remote-as 9929
+  update-source Loopback0
+  address-family vpnv4 unicast
+   route-policy PASS in
+   route-policy PASS out
+   next-hop-self
+  !
+ !
+ vrf CUST1
+  rd 9929:1
+  address-family ipv4 unicast
+  !
+  neighbor 10.1.13.3
+   remote-as 6000
+   address-family ipv4 unicast
+    route-policy PASS in
+    route-policy PASS out
+    as-override
+   !
+  !
+ !
+!
+mpls ldp
+ router-id Loopback0
+ interface GigabitEthernet0/0/0/0
+!
+end

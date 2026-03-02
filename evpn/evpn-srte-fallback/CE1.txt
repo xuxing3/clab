@@ -1,0 +1,22 @@
+hostname CE1
+username admin
+ group root-lr
+ group cisco-support
+ password cisco!123
+ssh server v2
+!
+interface Loopback0
+ ipv4 address 10.1.5.5 255.255.255.255
+!
+interface GigabitEthernet0/0/0/0
+ description Link to PE1
+ ipv4 address 10.1.15.5 255.255.255.0
+!
+interface GigabitEthernet0/0/0/0.10
+ ipv4 address 172.16.1.1 255.255.255.252
+ encapsulation dot1q 10
+!
+interface GigabitEthernet0/0/0/1
+ description Link to PE2
+ ipv4 address 10.1.25.5 255.255.255.0
+!

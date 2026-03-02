@@ -1,0 +1,36 @@
+hostname CE2
+username admin
+ group root-lr
+ group cisco-support
+ password cisco!123
+ssh server v2
+!
+interface Loopback0
+ ipv4 address 10.1.6.6 255.255.255.255
+!
+interface GigabitEthernet0/0/0/0
+ description Link to PE2
+ ipv4 address 10.1.26.6 255.255.255.0
+ no shutdown
+!
+interface GigabitEthernet0/0/0/1
+ description Link to PE1
+ ipv4 address 10.1.16.6 255.255.255.0
+ no shutdown
+!
+router bgp 65006
+ bgp router-id 10.1.6.6
+ address-family ipv4 unicast
+  redistribute connected
+ !
+ neighbor 10.1.26.2
+  remote-as 65000
+  address-family ipv4 unicast
+  !
+ !
+ neighbor 10.1.16.1
+  remote-as 65000
+  address-family ipv4 unicast
+  !
+ !
+!

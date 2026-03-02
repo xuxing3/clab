@@ -1,0 +1,94 @@
+name: xrd-spf
+
+topology:
+  kinds:
+    cisco_xrd:
+      image: ios-xr/xrd-control-plane:7.9.2
+  nodes:
+    r1:
+      kind: cisco_xrd
+      startup-config: config/r1.cfg
+    r2:
+      kind: cisco_xrd
+      startup-config: config/r2.cfg
+    r3:
+      kind: cisco_xrd
+      startup-config: config/r3.cfg
+    r4:
+      kind: cisco_xrd
+      startup-config: config/r4.cfg
+    r5:
+      kind: cisco_xrd
+      startup-config: config/r5.cfg
+    r6:
+      kind: cisco_xrd
+      startup-config: config/r6.cfg
+    r7:
+      kind: cisco_xrd
+      startup-config: config/r7.cfg
+    r8:
+      kind: cisco_xrd
+      startup-config: config/r8.cfg
+    r9:
+      kind: cisco_xrd
+      startup-config: config/r9.cfg
+    r10:
+      kind: cisco_xrd
+      startup-config: config/r10.cfg
+    r11:
+      kind: cisco_xrd
+      startup-config: config/r11.cfg
+    r12:
+      kind: cisco_xrd
+      startup-config: config/r12.cfg
+    r13:
+      kind: cisco_xrd
+      startup-config: config/r13.cfg
+    r14:
+      kind: cisco_xrd
+      startup-config: config/r14.cfg
+    r15:
+      kind: cisco_xrd
+      startup-config: config/r15.cfg
+    r16:
+      kind: cisco_xrd
+      startup-config: config/r16.cfg
+    r17:
+      kind: cisco_xrd
+      startup-config: config/r17.cfg
+    r18:
+      kind: cisco_xrd
+      startup-config: config/r18.cfg
+    r19:
+      kind: cisco_xrd
+      startup-config: config/r19.cfg
+    r20:
+      kind: cisco_xrd
+      startup-config: config/r20.cfg
+  links:
+    - endpoints: ["r1:Gi0-0-0-0", "r2:Gi0-0-0-1"]
+    - endpoints: ["r1:Gi0-0-0-1", "r3:Gi0-0-0-1"]
+    - endpoints: ["r2:Gi0-0-0-0", "r3:Gi0-0-0-0"]
+    - endpoints: ["r2:Gi0-0-0-2", "r5:Gi0-0-0-1"]
+    - endpoints: ["r2:Gi0-0-0-3", "r7:Gi0-0-0-1"]
+    - endpoints: ["r2:Gi0-0-0-4", "r4:Gi0-0-0-0"]
+    - endpoints: ["r3:Gi0-0-0-2", "r6:Gi0-0-0-1"]
+    - endpoints: ["r3:Gi0-0-0-3", "r8:Gi0-0-0-1"]
+    - endpoints: ["r3:Gi0-0-0-4", "r4:Gi0-0-0-1"]
+    - endpoints: ["r5:Gi0-0-0-0", "r6:Gi0-0-0-0"]
+    - endpoints: ["r5:Gi0-0-0-2", "r9:Gi0-0-0-1"]
+    - endpoints: ["r6:Gi0-0-0-2", "r14:Gi0-0-0-1"]
+    - endpoints: ["r7:Gi0-0-0-0", "r8:Gi0-0-0-0"]
+    - endpoints: ["r7:Gi0-0-0-2", "r15:Gi0-0-0-1"]
+    - endpoints: ["r7:Gi0-0-0-3", "r12:Gi0-0-0-3"]
+    - endpoints: ["r8:Gi0-0-0-2", "r20:Gi0-0-0-1"]
+    - endpoints: ["r9:Gi0-0-0-0", "r10:Gi0-0-0-0"]
+    - endpoints: ["r10:Gi0-0-0-1", "r11:Gi0-0-0-1"]
+    - endpoints: ["r11:Gi0-0-0-0", "r12:Gi0-0-0-0"]
+    - endpoints: ["r12:Gi0-0-0-1", "r13:Gi0-0-0-1"]
+    - endpoints: ["r13:Gi0-0-0-0", "r14:Gi0-0-0-0"]
+    - endpoints: ["r15:Gi0-0-0-0", "r16:Gi0-0-0-0"]
+    - endpoints: ["r16:Gi0-0-0-1", "r17:Gi0-0-0-1"]
+    - endpoints: ["r17:Gi0-0-0-0", "r18:Gi0-0-0-0"]
+    - endpoints: ["r18:Gi0-0-0-1", "r19:Gi0-0-0-1"]
+    - endpoints: ["r19:Gi0-0-0-0", "r20:Gi0-0-0-0"]
